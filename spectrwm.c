@@ -2300,13 +2300,12 @@ bar_print_legacy(struct swm_region *r, const char *s)
 		while(*cur != SWM_BAR_DELIMITER && *cur){
 			cur++;
 		}
+		first_len = cur - s;
 		if(*cur){
 			cur++;
-			
 		} else{
 			allow_two = 0;
 		}
-		first_len = cur - s;
 	}
 	if(bar_justify == SWM_BAR_JUSTIFY_BOTH && allow_two){
 		XmbTextExtents(bar_fs, s, first_len, &ibox, &lbox);
