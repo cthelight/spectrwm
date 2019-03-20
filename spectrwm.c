@@ -2290,7 +2290,7 @@ bar_print_legacy(struct swm_region *r, const char *s)
 	/* The XRectangle info for the 2nd draw call (if necessary) */
 	XRectangle	ibox2, lbox2;
 	/* Pointer that will eventualy point to the 2nd half of the bar string (if necessary) */
-	char		*cur;
+	const char		*cur;
 
 
 	len = strlen(s);
@@ -2368,10 +2368,6 @@ bar_print_legacy(struct swm_region *r, const char *s)
 	}
 	XFreeGC(display, draw);
 
-	/* Only free if malloc'd */
-	if(bar_justify == SWM_BAR_JUSTIFY_BOTH){
-		free(cpy);
-	}
 	/* blt */
 	xcb_copy_area(conn, r->bar->buffer, r->bar->id, r->s->gc, 0, 0,
 	    0, 0, WIDTH(r->bar), HEIGHT(r->bar));
