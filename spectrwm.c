@@ -2283,8 +2283,8 @@ bar_print_legacy(struct swm_region *r, const char *s)
 	char		draw_two = 0;
 	/* Flag indicating both draw calls are allowed */
 	char		allow_two = 1;
-	/* Copy of s that will be modified (if necessary) */
-	char		*cpy;
+	/* Length of first piece of the string */
+	int first_len = 0;
 	/* The x value of the 2nd draw call (if necessary) */
 	int 		x1 = 0;
 	/* The XRectangle info for the 2nd draw call (if necessary) */
@@ -2296,22 +2296,21 @@ bar_print_legacy(struct swm_region *r, const char *s)
 	len = strlen(s);
 	/* Only copy and manipulate s if required */
 	if(bar_justify == SWM_BAR_JUSTIFY_BOTH){
-		cpy = (char *)malloc((len + 1) * sizeof(char));
-		strcpy(cpy, s);
-		cur = cpy;
+		cur = s;
 		while(*cur != SWM_BAR_DELIMITER && *cur){
 			cur++;
+			first_len++;
 		}
 		if(*cur){
-			*cur = '\0';
 			cur++;
+			
 		} else{
 			allow_two = 0;
 		}
 	}
 
 	if(bar_justify == SWM_BAR_JUSTIFY_BOTH && allow_two){
-		XmbTextExtents(bar_fs, cpy, strlen(cpy), &ibox, &lbox);
+		XmbTextExtents(bar_fs, s, first_len, &ibox, &lbox);
 		XmbTextExtents(bar_fs, cur, strlen(cur), &ibox2, &lbox2);
 		draw_two = 1;
 	} else {
@@ -2358,7 +2357,7 @@ bar_print_legacy(struct swm_region *r, const char *s)
 		/* Draw both halves of bar text when necessary */
 		DRAWSTRING(display, r->bar->buffer, bar_fs, draw,
 			x, (bar_fs_extents->max_logical_extent.height - lbox.height) / 2 -
-			lbox.y, cpy, strlen(cpy));
+			lbox.y, s, first_len);
 		DRAWSTRING(display, r->bar->buffer, bar_fs, draw,
 			x1, (bar_fs_extents->max_logical_extent.height - lbox2.height) / 2 -
 			lbox2.y, cur, strlen(cur));
