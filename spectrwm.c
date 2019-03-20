@@ -2299,7 +2299,6 @@ bar_print_legacy(struct swm_region *r, const char *s)
 		cur = s;
 		while(*cur != SWM_BAR_DELIMITER && *cur){
 			cur++;
-			first_len++;
 		}
 		if(*cur){
 			cur++;
@@ -2307,8 +2306,8 @@ bar_print_legacy(struct swm_region *r, const char *s)
 		} else{
 			allow_two = 0;
 		}
+		first_len = cur - s;
 	}
-
 	if(bar_justify == SWM_BAR_JUSTIFY_BOTH && allow_two){
 		XmbTextExtents(bar_fs, s, first_len, &ibox, &lbox);
 		XmbTextExtents(bar_fs, cur, strlen(cur), &ibox2, &lbox2);
