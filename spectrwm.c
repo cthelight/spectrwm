@@ -2411,7 +2411,7 @@ bar_print(struct swm_region *r, const char *s)
 	}
 
 	if(bar_justify == SWM_BAR_JUSTIFY_BOTH && allow_two){
-		XftTextExtentsUtf8(display, bar_font, (FcChar8 *)cpy, strlen(cpy), &info);
+		XftTextExtentsUtf8(display, bar_font, (FcChar8 *)s, first_len, &info);
 		XftTextExtentsUtf8(display, bar_font, (FcChar8 *)cur, strlen(cur), &info2);
 	} else {
 		XftTextExtentsUtf8(display, bar_font, (FcChar8 *)s, len, &info);
@@ -2456,7 +2456,7 @@ bar_print(struct swm_region *r, const char *s)
 		/* Draw both halves of bar text when necessary */
 		XftDrawStringUtf8(draw, &bar_font_color, bar_font, x,
 	    	(HEIGHT(r->bar) + bar_font->height) / 2 - bar_font->descent,
-	    	(FcChar8 *)cpy, strlen(cpy));
+	    	(FcChar8 *)s, first_len);
 
 		XftDrawStringUtf8(draw, &bar_font_color, bar_font, x1,
 	    	(HEIGHT(r->bar) + bar_font->height) / 2 - bar_font->descent,
