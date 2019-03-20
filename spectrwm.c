@@ -2283,7 +2283,7 @@ bar_print_legacy(struct swm_region *r, const char *s)
 	char		draw_two = 0;
 	/* Flag indicating both draw calls are allowed */
 	char		allow_two = 1;
-	/* Length of first piece of the string */
+	/* Length of first piece of the string (if necessary)*/
 	int first_len = 0;
 	/* The x value of the 2nd draw call (if necessary) */
 	int 		x1 = 0;
@@ -2294,7 +2294,7 @@ bar_print_legacy(struct swm_region *r, const char *s)
 
 
 	len = strlen(s);
-	/* Only copy and manipulate s if required */
+	/* Only locate 2nd half if necessary */
 	if(bar_justify == SWM_BAR_JUSTIFY_BOTH){
 		cur = s;
 		while(*cur != SWM_BAR_DELIMITER && *cur){
@@ -2385,27 +2385,25 @@ bar_print(struct swm_region *r, const char *s)
 	char				draw_two = 0;
 	/* Flag indicating both draw calls are allowed */
 	char				allow_two = 1;
-	/* copy of s that will be modified (if necessary) */
-	char 				*cpy;
+	/* Length of first piece of the string (if necessary)*/
+	int first_len = 0;
 	/* Pointer that will eventually point to the start of the 2nd half of the text (if necessary) */
-	char 				*cur;
+	const char 				*cur;
 	/* the x value for the 2nd draw call (if necessary) */
 	int32_t				x1 = 0;
 	/* Glyph Info for the 2nd draw call (if necessary) */
 	XGlyphInfo			info2;
 
 	len = strlen(s);
-	/* Only copy and manipulate s if required */
+	/* Only locate 2nd half if necessary */
 	if(bar_justify == SWM_BAR_JUSTIFY_BOTH){
-		cpy = (char *)malloc((len + 1) * sizeof(char));
-		strcpy(cpy, s);
-		cur = cpy;
+		cur = s;
 
 		while(*cur != SWM_BAR_DELIMITER && *cur){
 			cur++;
 		}
+		first_len = cur - s;
 		if(*cur){
-			*cur = '\0';
 			cur++;
 		} else{
 			allow_two = 0;
@@ -2471,11 +2469,6 @@ bar_print(struct swm_region *r, const char *s)
 	}
 
 	XftDrawDestroy(draw);
-
-	/* Only free if malloc'd */
-	if(bar_justify == SWM_BAR_JUSTIFY_BOTH){
-		free(cpy);
-	}
 
 	/* blt */
 	xcb_copy_area(conn, r->bar->buffer, r->bar->id, r->s->gc, 0, 0,
